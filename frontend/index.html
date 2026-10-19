@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8fc" />
+    <meta name="description" content="Generate clean, useful project documentation from your source code using AI." />
+
+    <title>Docsy — AI Code Documentation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="#" aria-label="Docsy home">
+                <span class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M6 3.75h8l4 4v12.5H6a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                        <path d="M14 3.75v4h4M8 12h8M8 15.5h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <span>docsy<span class="brand-dot">.</span></span>
+            </a>
+
+            <div class="topbar-right">
+                <span class="api-indicator">
+                    <span class="status-dot"></span>
+                    AI documentation
+                </span>
+                <span class="version-label">BETA</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="hero">
+                <div class="eyebrow">
+                    <span class="eyebrow-line"></span>
+                    YOUR CODE, DOCUMENTED
+                </div>
+
+                <h1>Good code deserves<br /> <span>great documentation.</span></h1>
+
+                <p class="hero-description">
+                    Upload your project and let AI turn your source code into
+                    clear, structured documentation — ready for your README.
+                </p>
+            </section>
+
+            <section class="workspace">
+                <div class="section-heading">
+                    <div>
+                        <h2>Project workspace</h2>
+                        <p>Start with your source files. We'll handle the documentation.</p>
+                    </div>
+                    <span class="step-label">STEP 01 / 02</span>
+                </div>
+
+                <div class="upload-card">
+                    <input
+                        id="files"
+                        type="file"
+                        multiple
+                        webkitdirectory
+                        directory
+                        hidden
+                        aria-label="Choose a project folder"
+                    />
+
+                    <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Choose files or drop them here">
+                        <div class="upload-icon">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M5 14.5v3.75A1.75 1.75 0 0 0 6.75 20h10.5A1.75 1.75 0 0 0 19 18.25V14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+
+                        <h3>Bring your project to life</h3>
+                        <p>Drag and drop source files here, or choose a folder to get started.</p>
+
+                        <button type="button" id="browseBtn" class="button button-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h6.75a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-12.75a2 2 0 0 1-2-2v-10Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                            </svg>
+                            Choose project folder
+                        </button>
+
+                        <span class="drop-hint">Your files stay on your machine until you generate docs.</span>
+                    </div>
+
+                    <div class="upload-footer">
+                        <span>
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                                <path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6"/>
+                            </svg>
+                            Local selection · Secure transport
+                        </span>
+                        <span>Multiple files supported</span>
+                    </div>
+                </div>
+
+                <div id="selectedSection" class="selected-section hidden">
+                    <div class="selected-heading">
+                        <div>
+                            <h3>Selected files <span id="fileCount" class="count-badge">0</span></h3>
+                            <p id="fileSummary">Review the files before generating.</p>
+                        </div>
+                        <button type="button" id="clearBtn" class="text-button">Clear all</button>
+                    </div>
+
+                    <div id="fileList" class="file-list"></div>
+                </div>
+
+                <div class="generate-row">
+                    <div id="statusMessage" class="status-message" role="status" aria-live="polite">
+                        <span class="status-dot muted-dot"></span>
+                        Waiting for your project files
+                    </div>
+
+                    <button type="button" id="generateBtn" class="button button-primary" disabled>
+                        <span id="generateLabel">Generate documentation</span>
+                        <svg id="generateArrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Your documentation</h2>
+                        <p>Review your generated Markdown and download your README.</p>
+                    </div>
+                    <span class="step-label">STEP 02 / 02</span>
+                </div>
+
+                <div class="output-card">
+                    <div class="output-toolbar">
+                        <div class="output-title">
+                            <span class="markdown-icon">M↓</span>
+                            <div>
+                                <strong>README.md</strong>
+                                <span id="outputSubtitle">Your generated documentation will appear here</span>
+                            </div>
+                        </div>
+
+                        <button id="downloadBtn" class="button button-secondary button-small" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M12 4v11m0 0 4-4m-4 4-4-4M5 17v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Download README
+                        </button>
+                    </div>
+
+                    <div id="output" class="markdown-preview">
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M6 3.75h8l4 4v12.5H6a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                                    <path d="M14 3.75v4h4M8 12h8M8 15.5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <h3>Your README starts here</h3>
+                            <p>Select your project files and generate documentation. Your output will be rendered here with readable headings, code blocks, and lists.</p>
+                        </div>
+                    </div>
+
+                    <div class="output-footer">
+                        <span id="outputMeta">Markdown preview</span>
+                        <span>Generated by AI · Powered by your backend</span>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="page-footer">
+                <span>Built for developers who care about clarity.</span>
+                <span>DOCSY <span class="brand-dot">.</span></span>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

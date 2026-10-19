@@ -1,0 +1,56 @@
+
+# ==============================
+# Environment variables and secrets
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Python virtual environments
+# ==============================
+backend/venv/
+backend/.venv/
+venv/
+.venv/
+
+# ==============================
+# Python cache and compiled files
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==============================
+# Testing and coverage
+# ==============================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==============================
+# IDE and editor files
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==============================
+# Operating system files
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Logs and temporary files
+# ==============================
+*.log
+*.tmp
+*.bak
+
+# ==============================
+# Generated documentation
+# ==============================
+README.generated.md
